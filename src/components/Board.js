@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { determineBoardState, boardFull, getWinner } from '../Logic/Board';
+import { determineBoardState, boardFull } from '../Logic/Board';
 import handleAIMove from '../AI/main.js';
 import Naught from './Naught';
 import Cross from './Cross';
@@ -19,11 +19,8 @@ export default class Board extends Component {
             board: [[null, null, null],
                     [null, null, null],
                     [null, null, null]],
+            treeDepth: 0,
         }
-
-        //console.log("current winner: " + getWinner([[[null, "naught"], [null, "cross"], [null, "naught"]],
-        //                                            [[null, "naught"], [null, "cross"], [null, "cross"]],
-        //                                            [[null, "cross"], [null, "naught"], [null, "naught"]]]))
     }
 
     createNewGame() {
@@ -35,16 +32,19 @@ export default class Board extends Component {
             board: [[null, null, null],
                     [null, null, null],
                     [null, null, null]],
+            treeDepth: 0
         });
     }
 
     initiateAI() {
-        if(this.state.computersTurn) {
-            let nextMoves = handleAIMove(this.state.board);
-            if(nextMoves) {
-                this.handleTurn(nextMoves[0], nextMoves[1]);
+        setTimeout(() => {
+            if(this.state.computersTurn) {
+                let nextMoves = handleAIMove(this.state.board, this);
+                if(nextMoves) {
+                    this.handleTurn(nextMoves[0], nextMoves[1]);
+                }
             }
-        }
+        }, 3000);
     }
 
     handleTurn(rowIndex, columnIndex) {
@@ -62,9 +62,14 @@ export default class Board extends Component {
                 character: (this.state.character === 'x') ? 'o' : 'x',
                 board: oldBoard,
                 gameOver: (gameOver || full),
-                winner: (gameOver) ? this.state.character : null
+                winner: (gameOver) ? this.state.character : null,
             });
         }
+    }
+
+    provideDepth(d) {
+        console.log('depth; ' + d);
+        this.setState({ treeDepth: d });
     }
 
     render() {
@@ -73,14 +78,17 @@ export default class Board extends Component {
         return (
             <div className="board">
                 { (!this.state.gameOver) ?
-                <h3>{ (!this.computersTurn) ? 'It\'s your turn' : 'The computer is deciding...' }</h3> :
+                <h3 className={(this.state.computersTurn) ? 'thinking' : 'user'}>{ (!this.state.computersTurn) ? 'It\'s your turn' : 'The computer is thinking...' }</h3> :
                 <h3 className="winning">{ 
                     (this.state.winner === null) ? 'The game is a tie.' : (
                         (this.state.winner === 'x') ? 'You\'ve won the game!' : 'Computer Wins.'
                     )
                 }</h3>}
+                { (this.state.treeDepth > 0) ? <h4 style={{ opacity: 0.3 }}>AI previously enumerated minimax tree of depth { this.state.treeDepth }.</h4> : '' }
                 <table>
-                    <tbody>
+                    <tbody style={{
+                        opacity: (this.state.computersTurn) ? 0.5 : 1
+                    }}>
                         {this.state.board.map((row, rowIndex) => {
                             return (
                                 <tr key={rowIndex}>

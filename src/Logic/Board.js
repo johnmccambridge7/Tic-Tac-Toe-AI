@@ -80,27 +80,16 @@ export function getWinner(board) {
             let naughtState = determineBoardState(board, i, j, "o");
 
             if(crossState) {
-                //console.log(board)
-                //console.log("cross win")
                 return "x"
             }
 
             if(naughtState) {
-                //console.log(board)
-                //console.log("naught win")
                 return "o"
             }
         }
     }
 
     if(boardFull(board)) {
-        //console.log(board)
-        //console.log("was a tie")
         return "tie"
     }
-
-    //console.log(board)
-    //console.log("game still in play")
-
-    return null;
 }
