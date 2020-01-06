@@ -18,7 +18,7 @@ export function determineBoardState(board, rowIndex, columnIndex, character) {
         if(!board[i][columnIndex]) {
             verticle = false
         } else {
-            if(board[i][columnIndex][1] !== character) {
+            if(board[i][columnIndex] !== character) {
                 verticle = false
             }
         }
@@ -28,7 +28,7 @@ export function determineBoardState(board, rowIndex, columnIndex, character) {
         if(!board[rowIndex][i]) {
             horizontal = false
         } else {
-            if(board[rowIndex][i][1] !== character) {
+            if(board[rowIndex][i] !== character) {
                 horizontal = false
             }
         }
@@ -38,7 +38,7 @@ export function determineBoardState(board, rowIndex, columnIndex, character) {
         if(!board[i][j]) {
             leftDiagonal = false
         } else {
-            if(board[i][j][1] !== character) {
+            if(board[i][j] !== character) {
                 leftDiagonal = false
             }
         }
@@ -50,7 +50,7 @@ export function determineBoardState(board, rowIndex, columnIndex, character) {
         if(!board[i][k]) {
             rightDiagonal = false
         } else {
-            if(board[i][k][1] !== character) {
+            if(board[i][k] !== character) {
                 rightDiagonal = false
             }
         }
@@ -76,22 +76,31 @@ export function boardFull(board) {
 export function getWinner(board) {
     for(let i = 0; i < 3; i++) {
         for(let j = 0; j < 3; j++) {
-            let crossState = determineBoardState(board, i, j, "cross")
-            let naughtState = determineBoardState(board, i, j, "naught");
+            let crossState = determineBoardState(board, i, j, "x")
+            let naughtState = determineBoardState(board, i, j, "o");
 
             if(crossState) {
-                return "cross"
+                //console.log(board)
+                //console.log("cross win")
+                return "x"
             }
 
             if(naughtState) {
-                return "naught"
+                //console.log(board)
+                //console.log("naught win")
+                return "o"
             }
         }
     }
 
     if(boardFull(board)) {
+        //console.log(board)
+        //console.log("was a tie")
         return "tie"
     }
+
+    //console.log(board)
+    //console.log("game still in play")
 
     return null;
 }

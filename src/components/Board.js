@@ -5,26 +5,31 @@ import Naught from './Naught';
 import Cross from './Cross';
 
 // full game functionality completed in 2hrs 41mins
+// full AI functionality completed in 5hrs 15mins
 
 export default class Board extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            computersTurn: false,
-            character: 'cross',
+            computersTurn: true,
+            character: 'o',
             gameOver: false,
             winner: null,
             board: [[null, null, null],
                     [null, null, null],
                     [null, null, null]],
         }
+
+        //console.log("current winner: " + getWinner([[[null, "naught"], [null, "cross"], [null, "naught"]],
+        //                                            [[null, "naught"], [null, "cross"], [null, "cross"]],
+        //                                            [[null, "cross"], [null, "naught"], [null, "naught"]]]))
     }
 
     createNewGame() {
         this.setState({
-            computersTurn: false,
-            character: 'cross',
+            computersTurn: true,
+            character: 'o',
             gameOver: false,
             winner: null,
             board: [[null, null, null],
@@ -46,23 +51,18 @@ export default class Board extends Component {
 
         const oldBoard = this.state.board;
 
-        console.log("current winner: " + getWinner(this.state.board))
-
         if(!oldBoard[rowIndex][columnIndex] && !this.state.gameOver) {
+            oldBoard[rowIndex][columnIndex] = this.state.character;
 
-            const character = (this.state.character === 'cross') ? [<Cross />, "cross"] : [<Naught/>, "naught"];
-
-            oldBoard[rowIndex][columnIndex] = character;
-
-            const gameOver = determineBoardState(oldBoard, rowIndex, columnIndex, character[1]);
+            const gameOver = determineBoardState(oldBoard, rowIndex, columnIndex, this.state.character);
             const full = boardFull(oldBoard);
 
             this.setState({
                 computersTurn: !this.state.computersTurn,
-                character: (this.state.character === 'cross') ? 'naught' : 'cross',
+                character: (this.state.character === 'x') ? 'o' : 'x',
                 board: oldBoard,
                 gameOver: (gameOver || full),
-                winner: (gameOver) ? character[1] : null
+                winner: (gameOver) ? this.state.character : null
             });
         }
     }
@@ -76,7 +76,7 @@ export default class Board extends Component {
                 <h3>{ (!this.computersTurn) ? 'It\'s your turn' : 'The computer is deciding...' }</h3> :
                 <h3 className="winning">{ 
                     (this.state.winner === null) ? 'The game is a tie.' : (
-                        (this.state.winner === 'cross') ? 'You\'ve won the game!' : 'Computer Wins.'
+                        (this.state.winner === 'x') ? 'You\'ve won the game!' : 'Computer Wins.'
                     )
                 }</h3>}
                 <table>
@@ -91,7 +91,7 @@ export default class Board extends Component {
                                                     this.handleTurn(rowIndex, columnIndex);
                                                 }
                                             }}>
-                                                { (cell) ? cell[0] : '' }
+                                                { (cell) ? ((cell === 'x') ? <Cross /> : <Naught />) : '' }
                                             </td>
                                         );
                                     }) }    

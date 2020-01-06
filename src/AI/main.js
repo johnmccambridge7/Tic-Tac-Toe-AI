@@ -1,6 +1,6 @@
 // handles move for the AI character using minimax algorithm
 // returns the row and column index for the optimal move
-import { getWinner, boardFull } from '../Logic/Board';
+import { getWinner } from '../Logic/Board';
 
 export default function handleAIMove(board) {
     let move;
@@ -25,12 +25,12 @@ export default function handleAIMove(board) {
 }
 
 let scores = {
-    cross: 10,
-    naught: -10,
+    x: 10,
+    o: -10,
     tie: 0,
 }
 
-function minimax(board, depth, maximizingPlayer) {
+function minimax(board, maximizingPlayer) {
     let result = getWinner(board)
 
     if(result) {
@@ -42,7 +42,7 @@ function minimax(board, depth, maximizingPlayer) {
         for (let i = 0; i < 3; i++) {
           for (let j = 0; j < 3; j++) {
             if (board[i][j] === null) {
-              board[i][j] = [null, 'cross'];
+              board[i][j] = 'x';
               let score = minimax(board, false);
               board[i][j] = null;
               bestScore = Math.max(score, bestScore);
@@ -55,13 +55,16 @@ function minimax(board, depth, maximizingPlayer) {
         for (let i = 0; i < 3; i++) {
           for (let j = 0; j < 3; j++) {
             if (board[i][j] === null) {
-              board[i][j] = [null, 'naught'];
+
+              board[i][j] = 'o';
               let score = minimax(board, true);
               board[i][j] = null;
               bestScore = Math.min(score, bestScore);
+              
             }
           }
         }
+
         return bestScore;
     }
 }
