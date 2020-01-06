@@ -20,6 +20,10 @@ export default class Board extends Component {
                     [null, null, null],
                     [null, null, null]],
             treeDepth: 0,
+            permutations: 0,
+            winRatio: 0,
+            lossRatio: 0,
+            gamesPlayed: 1,
         }
     }
 
@@ -32,7 +36,11 @@ export default class Board extends Component {
             board: [[null, null, null],
                     [null, null, null],
                     [null, null, null]],
-            treeDepth: 0
+            treeDepth: 0,
+            permutations: 0,
+            winRatio: 0,
+            lossRatio: 0,
+            gamesPlayed: 1,
         });
     }
 
@@ -45,6 +53,10 @@ export default class Board extends Component {
                 }
             }
         }, 3000);
+    }
+    
+    numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
     handleTurn(rowIndex, columnIndex) {
@@ -67,9 +79,16 @@ export default class Board extends Component {
         }
     }
 
-    provideDepth(d) {
-        console.log('depth; ' + d);
-        this.setState({ treeDepth: d });
+    provideDepth(treeDepth) {
+        this.setState({ treeDepth });
+    }
+
+    providePermutations(permutations) {
+        this.setState({ permutations });
+    }
+
+    provideStats(winRatio, lossRatio, gamesPlayed) {
+        this.setState({ winRatio, lossRatio, gamesPlayed });
     }
 
     render() {
@@ -84,7 +103,20 @@ export default class Board extends Component {
                         (this.state.winner === 'x') ? 'You\'ve won the game!' : 'Computer Wins.'
                     )
                 }</h3>}
-                { (this.state.treeDepth > 0) ? <h4 style={{ opacity: 0.3 }}>AI previously enumerated minimax tree of depth { this.state.treeDepth }.</h4> : '' }
+                <div id="row1">
+                    <div id="column1">
+                        <div className="ai">
+                        { (this.state.treeDepth > 0) ? <h4 style={{ opacity: 0.3 }}>AI previously enumerated minimax tree of depth <b style={{ fontWeight: 'bold' }}>{ this.state.treeDepth }</b></h4> : '' }
+                        { (this.state.permutations > 0) ? <h4 style={{ opacity: 0.3 }}><b>{ this.numberWithCommas(this.state.permutations) }</b> possible game configurations considered.</h4> : '' }
+                        </div>
+                    </div>
+                    <div id="column2">
+                        <div className="confidence">
+                            <h4>Chances AI will lose: <b>{ Math.floor((this.state.winRatio / this.state.gamesPlayed) * 100) }%</b></h4>
+                            <h4>Chances AI will win: <b>{ Math.floor((this.state.lossRatio / this.state.gamesPlayed) * 100) }%</b></h4>
+                        </div>
+                    </div>
+                </div>
                 <table>
                     <tbody style={{
                         opacity: (this.state.computersTurn) ? 0.5 : 1
