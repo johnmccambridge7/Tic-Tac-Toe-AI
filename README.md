@@ -1,4 +1,10 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# AI for basic game logic (Tic-Tac-Toe).
+
+This algorithm utilizes a minimax decision tree in order to determine the optimal move when playing tic-tac-toe.
+
+Built using React and JS, this application runs in the browser and can be run here: [http://tictactoe-ai314.herokuapp.com/](http://tictactoe-ai314.herokuapp.com/)
+
+![Main User Interface]([https://i.ibb.co/PN4KYMP/Screen-Shot-2020-01-06-at-7-54-56-AM.png](https://i.ibb.co/PN4KYMP/Screen-Shot-2020-01-06-at-7-54-56-AM.png))
 
 ## Available Scripts
 
